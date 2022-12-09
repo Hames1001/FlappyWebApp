@@ -1,4 +1,4 @@
-//import './App.css'
+import './App.css'
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import PipePair from "./PipePair";
@@ -7,7 +7,7 @@ export const BIRD_SIZE = 20;
 export const GAME_WIDTH = 500;
 export const GAME_HEIGHT = 500;
 export const GRAVITY = 5;
-export const JUMP = 100;
+export const JUMP = 75;
 export const OBSTACLE_WIDTH = 40;
 export const PIPE_GAP = 200;
 export const BIRD_X = 0;
@@ -32,16 +32,6 @@ function App() {
     };
   }, [gameStarted, birdPosition]);
 
-  // useEffect(() => {
-  //   let time = 0;
-  //   while (gameStarted && time < 2) {
-  //     setPipeTables((pipe) => [...pipe, <PipePair gameStarted={gameStarted} birdPosition={birdPosition} setScore={setScore} setGameStarted={setGameStarted} />])
-  //   }
-
-  //   // return () => {
-  //   //   clearInterval(timeId);
-  //   // };
-  // })
 
   const handleClick = () => {
     let newBirdPosition = birdPosition - JUMP;
@@ -57,12 +47,26 @@ function App() {
   return (
     <Div onClick={handleClick}>
       <GameBox height={GAME_HEIGHT} width={GAME_WIDTH}>
-        <PipePair gameStarted={gameStarted} birdPosition={birdPosition} setScore={setScore} setGameStarted={setGameStarted} initialPos={GAME_WIDTH - OBSTACLE_WIDTH - 300} />
-        <PipePair gameStarted={gameStarted} birdPosition={birdPosition} setScore={setScore} setGameStarted={setGameStarted} initialPos={GAME_WIDTH - OBSTACLE_WIDTH - 150} />
-        <PipePair gameStarted={gameStarted} birdPosition={birdPosition} setScore={setScore} setGameStarted={setGameStarted} initialPos={GAME_WIDTH - OBSTACLE_WIDTH} />
-        {/* {pipeTables.map((item, i) => {
-          return item;
-        })} */}
+        <PipePair
+          gameStarted={gameStarted}
+          birdPosition={birdPosition}
+          setScore={setScore}
+          setGameStarted={setGameStarted}
+          initialPos={GAME_WIDTH - OBSTACLE_WIDTH - 300}
+        />
+        <PipePair
+          gameStarted={gameStarted}
+          birdPosition={birdPosition}
+          setScore={setScore} setGameStarted={setGameStarted}
+          initialPos={GAME_WIDTH - OBSTACLE_WIDTH - 150}
+        />
+        <PipePair
+          gameStarted={gameStarted}
+          birdPosition={birdPosition}
+          setScore={setScore}
+          setGameStarted={setGameStarted}
+          initialPos={GAME_WIDTH - OBSTACLE_WIDTH}
+        />
         <Bird size={BIRD_SIZE} top={birdPosition} />
       </GameBox>
     </Div>
@@ -88,17 +92,19 @@ const Div = styled.div`
 `;
 
 const GameBox = styled.div`
+  position: relative;
+  display: flex;
   height: ${(props) => props.height}px;
   width: ${(props) => props.width}px;
   background-color: blue;
   // overflow: hidden;
 `;
 
-export const Obstacle = styled.div`
-  position: relative;
-  top: ${(props) => props.top}px;
-  background-color: green;
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
-  left: ${(props) => props.left}px;
-`;
+// export const Obstacle = styled.div`
+//   position: relative;
+//   top: ${(props) => props.top}px;
+//   background-color: green;
+//   width: ${(props) => props.width}px;
+//   height: ${(props) => props.height}px;
+//   left: ${(props) => props.left}px;
+// `;

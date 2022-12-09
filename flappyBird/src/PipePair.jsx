@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
+  BIRD_SIZE,
   BIRD_X,
   GAME_HEIGHT,
   GAME_WIDTH,
-  Obstacle,
   OBSTACLE_WIDTH,
   PIPE_GAP,
 } from "./App";
@@ -11,9 +11,11 @@ import {
 const PipePair = (props) => {
   const { gameStarted, birdPosition, setScore, setGameStarted, initialPos } = props;
 
-  const [obstacleHeight, setObstacleHeight] = useState(200);
+  const [obstacleHeight, setObstacleHeight] = useState(() => Math.floor(Math.random() * (GAME_HEIGHT - PIPE_GAP)));
   const [obstacleLeft, setObstacleLeft] = useState(initialPos);
   const bottomObstacleHeight = GAME_HEIGHT - PIPE_GAP - obstacleHeight;
+
+  const [randState, setRandState] = useState(false);
 
   useEffect(() => {
     let obstacleId;
@@ -21,12 +23,10 @@ const PipePair = (props) => {
       obstacleId = setInterval(() => {
         setObstacleLeft((obstacleLeft) => obstacleLeft - 5);
       }, 24);
+    } else if (gameStarted && obstacleLeft < -OBSTACLE_WIDTH) {
+      setObstacleLeft(GAME_WIDTH);
+      setObstacleHeight(Math.floor(Math.random() * (GAME_HEIGHT - PIPE_GAP)));
     } else {
-      if (gameStarted && obstacleLeft < -OBSTACLE_WIDTH) {
-        setObstacleLeft(GAME_WIDTH - OBSTACLE_WIDTH);
-        setObstacleHeight(200);
-      }
-      // Math.floor(Math.random() * (GAME_HEIGHT - PIPE_GAP))
       setScore((s) => s + 1);
     }
 
@@ -43,34 +43,35 @@ const PipePair = (props) => {
       birdPosition >= GAME_HEIGHT - bottomObstacleHeight;
     if (
       obstacleLeft >= 0 &&
-      obstacleLeft <= OBSTACLE_WIDTH &&
+      obstacleLeft <= BIRD_SIZE &&
       (hasCollidedWithTop || hasCollidedWithBottom)
     ) {
+      console.log(obstacleLeft, birdPosition);
+      setRandState(true);
       setGameStarted(false);
     }
     if (
       BIRD_X > obstacleLeft &&
       (hasCollidedWithTop || hasCollidedWithBottom)
     ) {
+      console.log(obstacleLeft, birdPosition);
+      setRandState(true);
       setGameStarted(false);
     }
   }, [birdPosition, obstacleHeight, bottomObstacleHeight, obstacleLeft]);
 
   return (
-    <>
-      <Obstacle
-        top={0}
-        width={OBSTACLE_WIDTH}
-        height={obstacleHeight}
-        left={obstacleLeft}
+    <div className="obstacle-container" style={{ left: obstacleLeft, background: randState ? "coral" : "none" }}>
+      <div className="obstacle" style={{ width: OBSTACLE_WIDTH, height: obstacleHeight }}/>
+      <div
+        className="obstacle"
+        style={{ 
+          top: GAME_HEIGHT - (obstacleHeight + bottomObstacleHeight),
+          width: OBSTACLE_WIDTH,
+          height: bottomObstacleHeight,
+        }}
       />
-      <Obstacle
-        top={GAME_HEIGHT - (obstacleHeight + bottomObstacleHeight)}
-        width={OBSTACLE_WIDTH}
-        height={bottomObstacleHeight}
-        left={obstacleLeft}
-      />
-    </>
+    </div>
   )
 }
 
