@@ -40,7 +40,7 @@ const PipePair = (props) => {
       birdPosition >= 0 && birdPosition < obstacleHeight;
     const hasCollidedWithBottom =
       birdPosition <= GAME_HEIGHT &&
-      birdPosition >= GAME_HEIGHT - bottomObstacleHeight;
+      birdPosition + BIRD_SIZE >= GAME_HEIGHT - bottomObstacleHeight;
     if (
       obstacleLeft >= 0 &&
       obstacleLeft <= BIRD_SIZE &&
@@ -49,8 +49,7 @@ const PipePair = (props) => {
       console.log(obstacleLeft, birdPosition);
       setRandState(true);
       setGameStarted(false);
-    }
-    if (
+    } else if (
       BIRD_X > obstacleLeft &&
       (hasCollidedWithTop || hasCollidedWithBottom)
     ) {
