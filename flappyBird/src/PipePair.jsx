@@ -36,30 +36,31 @@ const PipePair = (props) => {
   }, [gameStarted, obstacleLeft]);
 
   useEffect(() => {
-    const hasCollidedWithTop =
-      birdPosition >= 0 && birdPosition < obstacleHeight;
-    const hasCollidedWithBottom =
-      birdPosition <= GAME_HEIGHT &&
-      birdPosition + BIRD_SIZE >= GAME_HEIGHT - bottomObstacleHeight;
-    if (
-      obstacleLeft >= 0 &&
-      obstacleLeft <= BIRD_SIZE &&
-      (hasCollidedWithTop || hasCollidedWithBottom)
-    ) {
-      console.log(obstacleLeft, birdPosition);
+    const hasCollidedWithTop = birdPosition >= 0
+      && birdPosition < obstacleHeight;
+
+    const hasCollidedWithBottom = birdPosition <= GAME_HEIGHT
+      && (birdPosition + BIRD_SIZE) >= (GAME_HEIGHT - bottomObstacleHeight);
+
+    const hasCollidedWithTopOrBottom = hasCollidedWithTop || hasCollidedWithBottom;
+
+    const hasCollidedWithVerticalEdge = obstacleLeft >= 0
+      && obstacleLeft <= BIRD_SIZE
+      && hasCollidedWithTopOrBottom;
+
+    const hasCollidedWithHorizontalEdge = BIRD_X > obstacleLeft
+      && hasCollidedWithTopOrBottom;
+
+    if (hasCollidedWithVerticalEdge || hasCollidedWithHorizontalEdge) {
+      // ! only adding these two lines so I can see what bar it hit:
       setRandState(true);
-      setGameStarted(false);
-    } else if (
-      BIRD_X > obstacleLeft &&
-      (hasCollidedWithTop || hasCollidedWithBottom)
-    ) {
       console.log(obstacleLeft, birdPosition);
-      setRandState(true);
       setGameStarted(false);
     }
   }, [birdPosition, obstacleHeight, bottomObstacleHeight, obstacleLeft]);
 
   return (
+    // This can still use the styled component, I just found this easier to work with:
     <div className="obstacle-container" style={{ left: obstacleLeft, background: randState ? "coral" : "none" }}>
       <div className="obstacle" style={{ width: OBSTACLE_WIDTH, height: obstacleHeight }}/>
       <div
